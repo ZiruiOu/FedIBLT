@@ -37,7 +37,7 @@ class HyperIBLT {
         return false;
       }
       key = keySumProxy(i, j) / cnt;
-      if (hashProxy(i, key) != j) {
+      if (key < (uint32_t)numel && hashProxy(i, key) != j) {
         return false;
       }
       return true;
@@ -152,7 +152,6 @@ class HyperIBLT {
   py::array_t<uint32_t> counter;
   py::array_t<uint32_t> hashBuckets;
 };
-
 
 PYBIND11_MODULE(fedIBLT, m) {
   m.doc() = "HyperIBLT by pybind11";
