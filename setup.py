@@ -131,14 +131,13 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    name="fedIBLT",
+    name="fed_iblt",
     version="0.0.1",
     author="Zirui Ou",
     author_email="zirui.ou@pku.edu.cn",
-    description="An implmentation of the Hyper IBLT in C++.",
+    description="An implmentation of the Hyper Invertable Bloom Lookup Table with pybind11 & C++.",
     long_description="",
-    packages=find_packages(),
-    ext_modules=[CMakeExtension("fedIBLT")],
+    ext_modules=[CMakeExtension("fed_iblt")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     extras_require={"test": ["pytest>=6.0"]},

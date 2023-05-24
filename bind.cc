@@ -8,11 +8,12 @@
 
 namespace py = pybind11;
 
-class HyperIBLT {
+class HyperIBLTDecoder {
  public:
-  HyperIBLT(int numRow, int numCol, int numel, uint32_t modulo,
-            py::array_t<uint32_t> keySum, py::array_t<float> valSum,
-            py::array_t<uint32_t> counter, py::array_t<uint32_t> hashBuckets)
+  HyperIBLTDecoder(int numRow, int numCol, int numel, uint32_t modulo,
+                   py::array_t<int64_t> keySum, py::array_t<float> valSum,
+                   py::array_t<int32_t> counter,
+                   py::array_t<int32_t> hashBuckets)
       : numRow(numRow),
         numCol(numCol),
         numel(numel),
@@ -22,9 +23,9 @@ class HyperIBLT {
         counter(counter),
         hashBuckets(hashBuckets) {}
 
-  ~HyperIBLT() = default;
+  ~HyperIBLTDecoder() = default;
 
-  bool Decode(py::array_t<float> results) {
+  bool decode(py::array_t<float> results) {
     auto keySumProxy = keySum.mutable_unchecked<2>();     // (numRow, numCol)
     auto valSumProxy = valSum.mutable_unchecked<2>();     // (numRow, numCol)
     auto counterProxy = counter.mutable_unchecked<2>();   // (numRow, numCol)
@@ -147,27 +148,18 @@ class HyperIBLT {
   int numCol;
   int numel;
   uint32_t modulo;
-  py::array_t<uint32_t> keySum;
+  py::array_t<int64_t> keySum;
   py::array_t<float> valSum;
-  py::array_t<uint32_t> counter;
-  py::array_t<uint32_t> hashBuckets;
+  py::array_t<int32_t> counter;
+  py::array_t<int32_t> hashBuckets;
 };
 
-PYBIND11_MODULE(fedIBLT, m) {
+PYBIND11_MODULE(fed_iblt, m) {
   m.doc() = "HyperIBLT by pybind11";
 
-  //  pybind11::class_<Fermat>(m, "Fermat")
-  //      .def(pybind11::init())
-  //      .def("insert", &Fermat::insert)
-  //      .def("insert_one", &Fermat::insert_one)
-  //      .def("delete_in_one_bucket", &Fermat::delete_in_one_bucket)
-  //      .def("verify", &Fermat::verify)
-  //      .def("display", &Fermat::display)
-  //      .def("decode", &Fermat::decode);
-
-  pybind11::class_<HyperIBLT>(m, "HyperIBLT")
-      .def(pybind11::init<int, int, int, uint32_t, py::array_t<uint32_t>,
-                          py::array_t<float>, py::array_t<uint32_t>,
-                          py::array_t<uint32_t>>())
-      .def("decode", &HyperIBLT::Decode, py::arg{}.noconvert());
+  pybind11::class_<HyperIBLTDecoder>(m, "HyperIBLTDecoder")
+      .def(pybind11::init<int, int, int, uint32_t, py::array_t<int64_t>,
+                          py::array_t<float>, py::array_t<int32_t>,
+                          py::array_t<int32_t>>())
+      .def("decode", &HyperIBLTDecoder::decode, py::arg{}.noconvert());
 }

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(FedIBLT CXX)
+project(Fediblt CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 # Set default CMAKE_BUILD_TYPE = Release
@@ -11,14 +11,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
-#find_package(Torch REQUIRED)
-#if(NOT Torch_FOUND)
-#    message(FATAL_ERROR "Pytorch not found!")
-#endif(NOT Torch_FOUND)
-
+# NOTE(ozr): adapt to your path
+set(pybind11_DIR ~/miniconda3/envs/ddfp/lib/python3.8/site-packages/pybind11/share/cmake/pybind11)
 find_package(pybind11 REQUIRED)
-
 include_directories(include)
 
-pybind11_add_module(fedIBLT ./bind.cc)
-target_link_libraries(fedIBLT PUBLIC ${TORCH_LIBRARIES})
+pybind11_add_module(fed_iblt ./bind.cc)
+target_compile_definitions(fed_iblt PRIVATE VERSION_INFO=${EXAMPLE_VERSION_INFO})
